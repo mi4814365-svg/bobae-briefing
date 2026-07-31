@@ -307,7 +307,8 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
     var open = Boolean(s && s.alive && s.target);
     dot.className = "dot " + (open ? "on" : "off");
     msg.textContent = (open ? "열려 있음" : "닫혀 있음") + (s && s.updatedAt ? " · " + s.updatedAt + " 확인" : "");
-    foot.textContent = "상태는 10분마다 자동으로 다시 확인합니다.";
+    // 이 페이지는 15초마다 스스로 다시 본다 — 새로고침할 필요가 없다
+    foot.textContent = "이 화면은 15초마다 스스로 상태를 다시 확인합니다. 새로고침하지 않으셔도 됩니다.";
 
     if (open) {
       body.innerHTML =
@@ -325,10 +326,26 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
     body.innerHTML = html;
   };
 
-  fetch("state.json?t=" + Date.now(), { cache: "no-store" })
-    .then(function (r) { return r.json(); })
-    .then(show)
-    .catch(function () { show(null); });
+  var moved = false;
+  var check = function () {
+    if (moved) return;
+    // ?t= 로 CDN·브라우저 캐시를 모두 우회한다. 이래야 새로고침 없이도 최신 상태가 온다.
+    fetch("state.json?t=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("bad")); })
+      .then(function (s) { if (Boolean(s && s.alive && s.target)) moved = true; show(s); })
+      .catch(function () { show(null); });
+  };
+
+  check();
+
+  /* 닫혀 있을 때 사용자가 아무것도 안 해도 스스로 다시 본다.
+     ① 15초마다 ② 탭으로 돌아왔을 때 ③ 뒤로가기로 되돌아왔을 때(bfcache)
+     — 껍데기 HTML 이 캐시돼 있어도 상태는 매번 새로 읽으므로 문제가 없다. */
+  setInterval(check, 15000);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") check();
+  });
+  window.addEventListener("pageshow", function (e) { if (e.persisted) check(); });
 })();
 </script>
 </body>
