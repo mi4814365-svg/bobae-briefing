@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="referrer" content="no-referrer">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
 <title>보배에프앤비 업무 대시보드</title>
 <style>
 /* ── 장부(ledger) — 숫자를 읽는 문서. 인주 붉은색은 '위험'에만 쓴다 ──
@@ -284,26 +285,51 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
   <p class="eyebrow">주식회사 보배에프앤비 · 사내 한정</p>
   <h1>업무 대시보드</h1>
 
-  <div class="state">
-    <span class="dot on"></span>
-    <span>열려 있음 · 2026-07-31 13:41 확인</span>
-  </div>
-
-  <div>
-    <p>대시보드로 이동합니다. 안 넘어가면 아래를 눌러주세요.</p>
-    <p style="margin-top:14px;"><a class="go" href="https://dow-taste-explore-achieving.trycloudflare.com/?view=dashboard">대시보드 열기</a></p>
-  </div>
-
-  <p class="state">상태는 10분마다 자동으로 다시 확인합니다.</p>
+  <div class="state"><span class="dot" id="dot"></span><span id="msg">상태 확인 중…</span></div>
+  <div id="body"></div>
+  <p class="state" id="foot"></p>
 </div>
 
 <script>
-/* 열려 있다고 확인된 경우에만 자동으로 넘긴다.
-   ⚠️ 브라우저에서 생사 확인을 할 수 없다 — 개발서버(Vite)가 다른 도메인에서 오는
+/* ⚠️ 이 HTML 은 GitHub 이 10분간 캐시한다. 상태를 여기 박아두면 옛 판이 남아
+      "닫혀 있다"고 잘못 보인다(실제로 그렇게 잘못 표시된 적이 있다).
+      그래서 상태는 **같은 폴더의 state.json 을 캐시 무시하고 매번 새로 읽는다.**
+      같은 도메인이라 CORS 문제가 없다.
+   ⚠️ 대시보드에 직접 물어보는 건 불가능하다 — 개발서버(Vite)가 다른 도메인에서 오는
       요청을 Sec-Fetch/Origin 단계에서 403 으로 막아 fetch 도 <img> 도 통하지 않는다.
-      그래서 **서버(감시기)가 10분마다 확인한 결과를 이 파일에 박아** 쓴다.
-      화면 이동(top-level navigation)은 막히지 않으므로 이동 자체는 정상 동작한다. */
-setTimeout(function () { location.replace("https://dow-taste-explore-achieving.trycloudflare.com/?view=dashboard"); }, 900);
+      그래서 감시기가 10분마다 확인한 결과를 state.json 에 적고, 여기서는 그걸 읽는다. */
+(function () {
+  var BRIEFING = "https://mi4814365-svg.github.io/bobae-briefing/";
+  var dot = document.getElementById("dot"), msg = document.getElementById("msg");
+  var body = document.getElementById("body"), foot = document.getElementById("foot");
+
+  var show = function (s) {
+    var open = Boolean(s && s.alive && s.target);
+    dot.className = "dot " + (open ? "on" : "off");
+    msg.textContent = (open ? "열려 있음" : "닫혀 있음") + (s && s.updatedAt ? " · " + s.updatedAt + " 확인" : "");
+    foot.textContent = "상태는 10분마다 자동으로 다시 확인합니다.";
+
+    if (open) {
+      body.innerHTML =
+        "<p>대시보드로 이동합니다. 안 넘어가면 아래를 눌러주세요.</p>" +
+        '<p style="margin-top:14px;"><a class="go" href="' + s.target + '/?view=dashboard">대시보드 열기</a></p>';
+      setTimeout(function () { location.replace(s.target + "/?view=dashboard"); }, 900);
+      return;
+    }
+
+    var html =
+      "<p><strong>지금은 대시보드가 닫혀 있습니다.</strong> 사내 PC 에서 운영되는 화면이라 업무시간 외에는 꺼져 있을 수 있습니다.</p>" +
+      '<p class="alt">대신 <a href="' + BRIEFING + '">경영 브리핑</a>에서 오늘 지표·폐점 사유·경영전략·팀 현황을 보실 수 있습니다. 이쪽은 항상 열려 있습니다.</p>';
+    if (s && s.lan) html += '<p class="alt">사무실 와이파이에서는 <a href="' + s.lan + '/?view=dashboard">' + s.lan + "</a> 로도 들어가실 수 있습니다.</p>";
+    if (s && s.target) html += '<p class="alt">그래도 시도해보시려면 <a href="' + s.target + '/?view=dashboard">여기</a>를 누르세요.</p>';
+    body.innerHTML = html;
+  };
+
+  fetch("state.json?t=" + Date.now(), { cache: "no-store" })
+    .then(function (r) { return r.json(); })
+    .then(show)
+    .catch(function () { show(null); });
+})();
 </script>
 </body>
 </html>
