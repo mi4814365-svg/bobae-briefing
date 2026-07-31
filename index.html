@@ -7,7 +7,7 @@
 <meta name="googlebot" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="사내 한정 문서">
-<title>보배에프앤비 경영 브리핑 · 2026년 7월 31일 오전 11:25</title>
+<title>보배에프앤비 경영 브리핑 · 2026년 7월 31일 오후 12:13</title>
 <style>
 /* ── 장부(ledger) — 숫자를 읽는 문서. 인주 붉은색은 '위험'에만 쓴다 ──
    색을 아껴야 경고가 눈에 들어온다. 나머지는 전부 먹과 종이. */
@@ -205,6 +205,35 @@ td.num { font-family: ui-monospace, Consolas, monospace; font-variant-numeric: t
   padding: 1px 6px; border: 1px solid var(--rule); margin-right: 6px;
 }
 
+/* ── 결재 (서버 없이 기기에 저장) ── */
+.dec-bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  margin: 12px 0 0; padding: 10px 14px;
+  background: var(--surface); border: 1px solid var(--rule);
+}
+#dec-count {
+  font-family: ui-monospace, Consolas, monospace; font-size: 12px;
+  font-variant-numeric: tabular-nums; color: var(--ink-2);
+}
+#dec-copy {
+  margin-left: auto; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  padding: 7px 14px; border: 1px solid var(--ink); border-radius: 2px;
+  background: var(--ink); color: var(--paper);
+}
+#dec-copy:hover { opacity: 0.85; }
+.dec-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.dec {
+  font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  padding: 6px 14px; border: 1px solid var(--rule); border-radius: 2px;
+  background: var(--paper); color: var(--ink-2);
+}
+.dec:hover { border-color: var(--ink-3); color: var(--ink); }
+.dec[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.dec-mark { font-size: 11px; color: var(--ink-3); margin-left: 4px; }
+.pj-list > li.d-진행 { border-left: 4px solid var(--jade); }
+.pj-list > li.d-수정보완 { border-left: 4px solid var(--brass); }
+.pj-list > li.d-반려 { border-left: 4px solid var(--seal); opacity: 0.7; }
+
 /* ── 가상 성과 ── */
 .pj-group { margin-top: 22px; }
 .pj-group > h3 { margin: 0 0 8px; font-size: 15px; }
@@ -241,7 +270,7 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
     <div class="mast-row">
       <span class="verdict bad">오늘 위험 2건</span>
       <p class="stamp">
-        <span>발행 <b>2026년 7월 31일 오전 11:25</b></span>
+        <span>발행 <b>2026년 7월 31일 오후 12:13</b></span>
         <span>POS 실측 <b>2026-07-30 20:08</b></span>
         <span>주간보고 <b>2026-07-30 20:08</b></span>
         <span>외부정보 <b>2026-07-31 08:51</b></span>
@@ -735,9 +764,18 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
       계산으로 뽑아낸 추정·리스크·제안이며, 항목마다 근거와 가정을 붙였습니다.
       추정 5 · 리스크 14 · 제안 29.
     </p>
+    <div class="dec-bar">
+      <span id="dec-count">진행 0 · 수정보완 0 · 반려 0</span>
+      <button type="button" id="dec-copy">결정 내용 복사</button>
+    </div>
+    <p class="note">
+      항목마다 <strong>진행 · 수정보완 · 반려</strong>를 눌러 의견을 남기실 수 있습니다.
+      결정은 <strong>보시는 기기에만 저장</strong>되며 다른 분 화면에는 보이지 않습니다.
+      다 고르신 뒤 <strong>결정 내용 복사</strong>를 눌러 슬랙에 붙여넣어 주세요.
+    </p>
     <div class="pj-group">
       <h3>리스크 14건</h3>
-      <ul class="pj-list"><li>
+      <ul class="pj-list"><li data-key="reels::야탑점 일 목표 미달" data-team="야탑점" data-title="야탑점 일 목표 미달" data-value="달성률 57.1% · 하루 2,711,316원 부족">
         <div class="pj-head">
           <b>야탑점 일 목표 미달</b>
           <span class="pj-team">야탑점</span>
@@ -748,7 +786,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>일 목표 6,313,516원(월 목표 ÷ 31일) vs 오늘 3,602,200원</dd>
           <dt>가정</dt><dd>일 목표를 월 목표의 균등분할로 계산 — 실제 일별 목표는 요일별로 다를 수 있음</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="carousel::가산점 일 목표 미달" data-team="가산점" data-title="가산점 일 목표 미달" data-value="달성률 55.7% · 하루 2,503,655원 부족">
         <div class="pj-head">
           <b>가산점 일 목표 미달</b>
           <span class="pj-team">가산점</span>
@@ -759,7 +803,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>일 목표 5,656,355원(월 목표 ÷ 31일) vs 오늘 3,152,700원</dd>
           <dt>가정</dt><dd>일 목표를 월 목표의 균등분할로 계산 — 실제 일별 목표는 요일별로 다를 수 있음</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::고객 클레임 증가 전환" data-team="운영팀" data-title="고객 클레임 증가 전환" data-value="6월 4건 → 7월 6건 (+2)">
         <div class="pj-head">
           <b>고객 클레임 증가 전환</b>
           <span class="pj-team">운영팀</span>
@@ -770,7 +820,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>운영팀 주간보고 클레임 집계 (실제)</dd>
           <dt>가정</dt><dd>없음 — 실제 집계값 그대로</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::고산듀클래스점 폐점 — 합의해지" data-team="운영팀" data-title="고산듀클래스점 폐점 — 합의해지" data-value="7월 20일 폐점 · 8월7일까지 철거 완료 예정">
         <div class="pj-head">
           <b>고산듀클래스점 폐점 — 합의해지</b>
           <span class="pj-team">운영팀</span>
@@ -781,7 +837,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>운영팀 주간보고(2026-07-24) 원문: 고산듀클래스점 : 합의해지서 서명 완료(2026.07.23) / 7월 20일부로 폐점 및 8월7일까지 철거 완료 예정</dd>
           <dt>가정</dt><dd>없음 — 실제 집계값 그대로</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::부평시장점 폐점 — 합의해지" data-team="운영팀" data-title="부평시장점 폐점 — 합의해지" data-value="8월 3일 폐점 · 8월 6일까지 철거 완료 예정">
         <div class="pj-head">
           <b>부평시장점 폐점 — 합의해지</b>
           <span class="pj-team">운영팀</span>
@@ -792,7 +854,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>운영팀 주간보고(2026-07-24) 원문: 부평시장점 : 합의해지서 서명 완료(2026.07.24) / 8월 3일부로 폐점 및 8월 6일까지 철거 완료 예정</dd>
           <dt>가정</dt><dd>없음 — 실제 집계값 그대로</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::광교포레나점 폐점 — 건물 경매" data-team="운영팀" data-title="광교포레나점 폐점 — 건물 경매" data-value="건물 경매">
         <div class="pj-head">
           <b>광교포레나점 폐점 — 건물 경매</b>
           <span class="pj-team">운영팀</span>
@@ -803,7 +871,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>운영팀 주간보고(2026-07-24) 원문: 광교포레나점 : 관리사무실 통화 완료 / 해당 호실 경매 진행 중으로 관리 종료</dd>
           <dt>가정</dt><dd>없음 — 실제 집계값 그대로</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::폐점 사유 미기재 4건" data-team="운영팀" data-title="폐점 사유 미기재 4건" data-value="연간 폐점 7건 중 사유 확인 3건">
         <div class="pj-head">
           <b>폐점 사유 미기재 4건</b>
           <span class="pj-team">운영팀</span>
@@ -814,7 +888,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>지사별 폐점 집계 7건 vs 주간보고에서 사유를 찾은 3건</dd>
           <dt>가정</dt><dd>주간보고에 적힌 폐점만 사유를 찾을 수 있음 — 다른 문서에 기록됐을 수 있음</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="partner::해외 2개 지역 매출 감소" data-team="해외사업팀" data-title="해외 2개 지역 매출 감소" data-value="중국 (톈진) -7.85% (월 누적 1억 2,700만)">
         <div class="pj-head">
           <b>해외 2개 지역 매출 감소</b>
           <span class="pj-team">해외사업팀</span>
@@ -825,7 +905,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>해외사업팀 주간보고 지역별 증감률 (중국 (톈진) -7.85% · 인도네시아 -5.54%)</dd>
           <dt>가정</dt><dd>없음 — 실제 집계값 그대로</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="research::기업부설연구소 금주 계획 미기재" data-team="기업부설연구소" data-title="기업부설연구소 금주 계획 미기재" data-value="진행 53건은 있으나 계획 0건">
         <div class="pj-head">
           <b>기업부설연구소 금주 계획 미기재</b>
           <span class="pj-team">기업부설연구소</span>
@@ -836,7 +922,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>주간업무일지_260724 7월 4주.pptx (2026-07-24)</dd>
           <dt>가정</dt><dd>보고서 양식에 계획 칸이 없거나 추출이 안 된 경우도 포함</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="brand::마케팅팀 금주 계획 미기재" data-team="마케팅팀" data-title="마케팅팀 금주 계획 미기재" data-value="진행 136건은 있으나 계획 0건">
         <div class="pj-head">
           <b>마케팅팀 금주 계획 미기재</b>
           <span class="pj-team">마케팅팀</span>
@@ -847,7 +939,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>2026년 7월 성과보고(마케팅팀).pptx (2026-07-28)</dd>
           <dt>가정</dt><dd>보고서 양식에 계획 칸이 없거나 추출이 안 된 경우도 포함</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="partner::해외사업팀 금주 계획 미기재" data-team="해외사업팀" data-title="해외사업팀 금주 계획 미기재" data-value="진행 38건은 있으나 계획 0건">
         <div class="pj-head">
           <b>해외사업팀 금주 계획 미기재</b>
           <span class="pj-team">해외사업팀</span>
@@ -858,7 +956,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>주간업무보고_해외사업팀26.07.24.pptx (2026-07-24)</dd>
           <dt>가정</dt><dd>보고서 양식에 계획 칸이 없거나 추출이 안 된 경우도 포함</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="secretary::인사총무팀 금주 계획 미기재" data-team="인사총무팀" data-title="인사총무팀 금주 계획 미기재" data-value="진행 28건은 있으나 계획 0건">
         <div class="pj-head">
           <b>인사총무팀 금주 계획 미기재</b>
           <span class="pj-team">인사총무팀</span>
@@ -869,7 +973,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>주간업무일지(인사총무팀)_260724.pptx (2026-07-24)</dd>
           <dt>가정</dt><dd>보고서 양식에 계획 칸이 없거나 추출이 안 된 경우도 포함</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="finance::회계자금팀 기록 공백 59일" data-team="회계자금팀" data-title="회계자금팀 기록 공백 59일" data-value="최근 산출물 2026-06-01 ‘교보증권 5월 거래내역 8101’">
         <div class="pj-head">
           <b>회계자금팀 기록 공백 59일</b>
           <span class="pj-team">회계자금팀</span>
@@ -880,7 +990,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>공유 드라이브 회계자금팀 총 89건, 최근 7일 0건</dd>
           <dt>가정</dt><dd>드라이브에 올린 파일만 집계 — 다른 곳에 기록했을 수 있음</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="review::리부트파크점 기록 공백 65일" data-team="리부트파크점" data-title="리부트파크점 기록 공백 65일" data-value="최근 산출물 2026-05-26 ‘NAS 초기 설정 매뉴얼’">
         <div class="pj-head">
           <b>리부트파크점 기록 공백 65일</b>
           <span class="pj-team">리부트파크점</span>
@@ -891,11 +1007,17 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>공유 드라이브 리부트파크 총 8건, 최근 7일 0건</dd>
           <dt>가정</dt><dd>드라이브에 올린 파일만 집계 — 다른 곳에 기록했을 수 있음</dd>
         </dl>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
       </li></ul>
     </div>
     <div class="pj-group">
       <h3>추정 5건</h3>
-      <ul class="pj-list"><li>
+      <ul class="pj-list"><li data-key="reels::야탑점 월 예상 매출" data-team="야탑점" data-title="야탑점 월 예상 매출" data-value="1억 1,166만 (목표 1억 9,571만 대비 부족 8,405만)">
         <div class="pj-head">
           <b>야탑점 월 예상 매출</b>
           <span class="pj-team">야탑점</span>
@@ -906,7 +1028,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>오늘 실매출 3,602,200원 · 134건 (2026-07-30 20:08 메타포스 실측)</dd>
           <dt>가정</dt><dd>오늘 매출이 31일간 그대로 유지된다고 가정 — 요일·주말 편차는 반영 안 됨</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="carousel::가산점 월 예상 매출" data-team="가산점" data-title="가산점 월 예상 매출" data-value="9,773만 (목표 1억 7,534만 대비 부족 7,761만)">
         <div class="pj-head">
           <b>가산점 월 예상 매출</b>
           <span class="pj-team">가산점</span>
@@ -917,7 +1045,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>오늘 실매출 3,152,700원 · 108건 (2026-07-30 20:08 메타포스 실측)</dd>
           <dt>가정</dt><dd>오늘 매출이 31일간 그대로 유지된다고 가정 — 요일·주말 편차는 반영 안 됨</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::가맹 213개점 7월 예상 매출" data-team="운영팀" data-title="가맹 213개점 7월 예상 매출" data-value="192억 5,510만">
         <div class="pj-head">
           <b>가맹 213개점 7월 예상 매출</b>
           <span class="pj-team">운영팀</span>
@@ -928,7 +1062,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>7/1~7/25 누적 155억 2,831만 (운영팀 주간보고)</dd>
           <dt>가정</dt><dd>25일 평균이 남은 6일도 같다고 가정</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::물류 클레임 8월 예상" data-team="운영팀" data-title="물류 클레임 8월 예상" data-value="13건 (7월 23건 → -42.5% 추세 유지 시)">
         <div class="pj-head">
           <b>물류 클레임 8월 예상</b>
           <span class="pj-team">운영팀</span>
@@ -939,7 +1079,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>6월 물류 40건 → 7월 23건 (실제 집계)</dd>
           <dt>가정</dt><dd>6→7월 감소율이 7→8월에도 같게 적용된다고 가정</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::운영팀 금주 소화량 예상" data-team="운영팀" data-title="운영팀 금주 소화량 예상" data-value="계획 15건 / 진행 39건 = 소화율 38%">
         <div class="pj-head">
           <b>운영팀 금주 소화량 예상</b>
           <span class="pj-team">운영팀</span>
@@ -950,11 +1096,17 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>주간업무보고-운영팀(26.7.24).xlsx (7/20~7/24 진행 → 7/27~7/31 계획)</dd>
           <dt>가정</dt><dd>전주 진행량과 같은 속도로 계획을 소화한다고 가정</dd>
         </dl>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
       </li></ul>
     </div>
     <details class="pj-group">
       <summary style="cursor:pointer;font-size:15px;font-weight:700;">제안 29건 — 펼쳐 보기</summary>
-      <div style="margin-top:10px;"><ul class="pj-list"><li>
+      <div style="margin-top:10px;"><ul class="pj-list"><li data-key="research::짬뽕소스 원가 10% 절감 배합 확정" data-team="기업부설연구소" data-title="짬뽕소스 원가 10% 절감 배합 확정" data-value="직영·가맹 213개점 소스 원가 동시 절감">
         <div class="pj-head">
           <b>짬뽕소스 원가 10% 절감 배합 확정</b>
           <span class="pj-team">기업부설연구소</span>
@@ -965,7 +1117,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>다우푸드 33차에서 정제소금 10%·파프리카 50% 감소분 관능 이상 없음</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="research::냉짬뽕소스 여름 한정 메뉴 출시" data-team="기업부설연구소" data-title="냉짬뽕소스 여름 한정 메뉴 출시" data-value="7~8월 비수기 객단가 방어">
         <div class="pj-head">
           <b>냉짬뽕소스 여름 한정 메뉴 출시</b>
           <span class="pj-team">기업부설연구소</span>
@@ -976,7 +1134,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>레몬크림·냉짬뽕소스 품평 완료, 여름 신메뉴 공백</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="research::냉동볶음밥 300g 가맹 공급 확대" data-team="기업부설연구소" data-title="냉동볶음밥 300g 가맹 공급 확대" data-value="주방 부하 없이 사이드 매출 추가">
         <div class="pj-head">
           <b>냉동볶음밥 300g 가맹 공급 확대</b>
           <span class="pj-team">기업부설연구소</span>
@@ -987,7 +1151,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>짬뽕국밥 조합으로 검증, 가맹 판매가 2,200원 확정</dd>
           <dt>가정</dt><dd>공수 낮음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="brand::빤점이 굿즈 특수상권 10개소 확장" data-team="마케팅팀" data-title="빤점이 굿즈 특수상권 10개소 확장" data-value="브랜드 노출 + 굿즈 매출 신규 채널">
         <div class="pj-head">
           <b>빤점이 굿즈 특수상권 10개소 확장</b>
           <span class="pj-team">마케팅팀</span>
@@ -998,7 +1168,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>야구장 등 특수상권 3개소 콘텐츠 업로드 후 반응 확인됨</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="brand::크림짬뽕 밀키트 스마트스토어 단독 런칭" data-team="마케팅팀" data-title="크림짬뽕 밀키트 스마트스토어 단독 런칭" data-value="매장 외 매출원 확보">
         <div class="pj-head">
           <b>크림짬뽕 밀키트 스마트스토어 단독 런칭</b>
           <span class="pj-team">마케팅팀</span>
@@ -1009,7 +1185,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>밀키트 상품 소개서 제작 완료, 판매 채널 미확정</dd>
           <dt>가정</dt><dd>공수 높음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="brand::AI 검색 노출용 콘텐츠 축적 프로그램" data-team="마케팅팀" data-title="AI 검색 노출용 콘텐츠 축적 프로그램" data-value="검색 유입 장기 개선">
         <div class="pj-head">
           <b>AI 검색 노출용 콘텐츠 축적 프로그램</b>
           <span class="pj-team">마케팅팀</span>
@@ -1020,7 +1202,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>대행사 성과 보장 불가 판단 — 내부 콘텐츠 품질·누적이 관건</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="strategy1::직영 7개점 손익 표준화 · 부진점 3개월 개선 플랜" data-team="전략기획실" data-title="직영 7개점 손익 표준화 · 부진점 3개월 개선 플랜" data-value="부진점 영업이익 회복 경로 확보">
         <div class="pj-head">
           <b>직영 7개점 손익 표준화 · 부진점 3개월 개선 플랜</b>
           <span class="pj-team">전략기획실</span>
@@ -1031,7 +1219,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>점장 매뉴얼상 월 정산 양식은 있으나 매장별 편차 큼</dd>
           <dt>가정</dt><dd>공수 높음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="strategy1::가맹 213개점 등급제 도입 (매출·QSC 연동)" data-team="전략기획실" data-title="가맹 213개점 등급제 도입 (매출·QSC 연동)" data-value="관리 자원을 하위 등급에 집중">
         <div class="pj-head">
           <b>가맹 213개점 등급제 도입 (매출·QSC 연동)</b>
           <span class="pj-team">전략기획실</span>
@@ -1042,7 +1236,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>본사 104 · 지사 109개점, 관리 기준이 일괄 적용 중</dd>
           <dt>가정</dt><dd>공수 높음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="qa::QSC 하위 5개점 재점검 주기 2주로 단축" data-team="매장관리팀" data-title="QSC 하위 5개점 재점검 주기 2주로 단축" data-value="조리 편차·위생 리스크 조기 차단">
         <div class="pj-head">
           <b>QSC 하위 5개점 재점검 주기 2주로 단축</b>
           <span class="pj-team">매장관리팀</span>
@@ -1053,7 +1253,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>이번 주 15개점 점검 중 개선요청 3건 발생</dd>
           <dt>가정</dt><dd>공수 낮음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="qa::조리 편차 상위 항목 영상 매뉴얼화" data-team="매장관리팀" data-title="조리 편차 상위 항목 영상 매뉴얼화" data-value="신규 직원 교육 시간 단축">
         <div class="pj-head">
           <b>조리 편차 상위 항목 영상 매뉴얼화</b>
           <span class="pj-team">매장관리팀</span>
@@ -1064,7 +1270,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>유슬 정량 미준수 등 반복 지적 항목 존재</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="strategy2::일회용품 통합 발주로 단가 7% 인하" data-team="구매물류팀" data-title="일회용품 통합 발주로 단가 7% 인하" data-value="전 매장 소모품비 절감">
         <div class="pj-head">
           <b>일회용품 통합 발주로 단가 7% 인하</b>
           <span class="pj-team">구매물류팀</span>
@@ -1075,7 +1287,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>미리티 미팅에서 인쇄물·일회용품 단가 인하 여력 확인</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="strategy2::물류 클레임 상위 3품목 업체 교체 검토" data-team="구매물류팀" data-title="물류 클레임 상위 3품목 업체 교체 검토" data-value="클레임 건수 절반 이하로">
         <div class="pj-head">
           <b>물류 클레임 상위 3품목 업체 교체 검토</b>
           <span class="pj-team">구매물류팀</span>
@@ -1086,7 +1304,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>7월 물류 클레임 23건 — 단무지 색빠짐 등 반복 발생</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="reels::점심 세트 도입으로 객단가 8% 상향" data-team="야탑점" data-title="점심 세트 도입으로 객단가 8% 상향" data-value="동일 客수로 매출 상승">
         <div class="pj-head">
           <b>점심 세트 도입으로 객단가 8% 상향</b>
           <span class="pj-team">야탑점</span>
@@ -1097,7 +1321,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>월 평균 1억 9,572만, 점심 피크 회전율 여력 있음</dd>
           <dt>가정</dt><dd>공수 낮음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="reels::배달 피크 인력 재배치로 지연 30% 감소" data-team="야탑점" data-title="배달 피크 인력 재배치로 지연 30% 감소" data-value="리뷰 평점·재주문율 개선">
         <div class="pj-head">
           <b>배달 피크 인력 재배치로 지연 30% 감소</b>
           <span class="pj-team">야탑점</span>
@@ -1108,7 +1338,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>V.O.C 항목에 배달 지연·누락 상시 존재</dd>
           <dt>가정</dt><dd>공수 낮음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="carousel::오피스 상권 금요일 매출 보완 프로모션" data-team="가산점" data-title="오피스 상권 금요일 매출 보완 프로모션" data-value="주간 매출 편차 축소">
         <div class="pj-head">
           <b>오피스 상권 금요일 매출 보완 프로모션</b>
           <span class="pj-team">가산점</span>
@@ -1119,7 +1355,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>가산 오피스 상권 특성상 주말 진입 전 매출 하락</dd>
           <dt>가정</dt><dd>공수 낮음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="carousel::인근 기업 10곳 단체 예약 채널 확보" data-team="가산점" data-title="인근 기업 10곳 단체 예약 채널 확보" data-value="예약 기반 고정 매출 확보">
         <div class="pj-head">
           <b>인근 기업 10곳 단체 예약 채널 확보</b>
           <span class="pj-team">가산점</span>
@@ -1130,7 +1372,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>월 평균 1억 7,535만, 단체 수요 미개발</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="partner::인도네시아 3호점 후보지 선정" data-team="해외사업팀" data-title="인도네시아 3호점 후보지 선정" data-value="동남아 거점 확대">
         <div class="pj-head">
           <b>인도네시아 3호점 후보지 선정</b>
           <span class="pj-team">해외사업팀</span>
@@ -1141,7 +1389,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>2호점 9월 말 오픈 논의 중, 한인 비즈니스 채널 반응 확인</dd>
           <dt>가정</dt><dd>공수 높음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="partner::미국 H마트 2호점 추진 (얼바인 계약 후속)" data-team="해외사업팀" data-title="미국 H마트 2호점 추진 (얼바인 계약 후속)" data-value="미주 가맹 파이프라인 확보">
         <div class="pj-head">
           <b>미국 H마트 2호점 추진 (얼바인 계약 후속)</b>
           <span class="pj-team">해외사업팀</span>
@@ -1152,7 +1406,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>FDD 번역 진행 중 · 얼바인 가맹계약 체결 예정</dd>
           <dt>가정</dt><dd>공수 높음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="partner::중국 톈진 분말 현지 생산 전환 검토" data-team="해외사업팀" data-title="중국 톈진 분말 현지 생산 전환 검토" data-value="물류비·환리스크 축소">
         <div class="pj-head">
           <b>중국 톈진 분말 현지 생산 전환 검토</b>
           <span class="pj-team">해외사업팀</span>
@@ -1163,7 +1423,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>신규 분말 가격·레시피 전달 완료, 월 매출 1.27억 규모</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="finance::차입금 11억 금리 재협상 (3.0% → 2.8%)" data-team="회계자금팀" data-title="차입금 11억 금리 재협상 (3.0% → 2.8%)" data-value="연 이자비용 추가 절감">
         <div class="pj-head">
           <b>차입금 11억 금리 재협상 (3.0% → 2.8%)</b>
           <span class="pj-team">회계자금팀</span>
@@ -1174,7 +1440,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>직전 갱신에서 금융비용 770만원 절감 성공 이력</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="finance::직영점 카드 정산 자동화로 마감 3일 단축" data-team="회계자금팀" data-title="직영점 카드 정산 자동화로 마감 3일 단축" data-value="마감 리드타임·오류 동시 감소">
         <div class="pj-head">
           <b>직영점 카드 정산 자동화로 마감 3일 단축</b>
           <span class="pj-team">회계자금팀</span>
@@ -1185,7 +1457,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>매월 10일 매출 발행·25일 물류정산 수작업 비중 높음</dd>
           <dt>가정</dt><dd>공수 높음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="finance::회수 가능 대여금 우선순위 재정리" data-team="회계자금팀" data-title="회수 가능 대여금 우선순위 재정리" data-value="현금흐름 예측 정확도 상승">
         <div class="pj-head">
           <b>회수 가능 대여금 우선순위 재정리</b>
           <span class="pj-team">회계자금팀</span>
@@ -1196,7 +1474,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>일부 투자처 공사 중단으로 회수 불확실</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="review::상권 특성 반영 메뉴 축소로 회전율 개선" data-team="리부트파크점" data-title="상권 특성 반영 메뉴 축소로 회전율 개선" data-value="주방 준비시간 단축·회전율 상승">
         <div class="pj-head">
           <b>상권 특성 반영 메뉴 축소로 회전율 개선</b>
           <span class="pj-team">리부트파크점</span>
@@ -1207,7 +1491,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>타 직영점과 상권·客층이 달라 동일 라인업 비효율</dd>
           <dt>가정</dt><dd>공수 낮음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::폐점 2개점 상권 재입점 검토" data-team="운영팀" data-title="폐점 2개점 상권 재입점 검토" data-value="공백 상권 선점">
         <div class="pj-head">
           <b>폐점 2개점 상권 재입점 검토</b>
           <span class="pj-team">운영팀</span>
@@ -1218,7 +1508,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>고산듀클래스점·부평시장점 폐점 확정, 상권 자체는 유효</dd>
           <dt>가정</dt><dd>공수 높음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::클레임 물류 23건 → 10건 감축 프로그램" data-team="운영팀" data-title="클레임 물류 23건 → 10건 감축 프로그램" data-value="가맹 만족도·재계약률 개선">
         <div class="pj-head">
           <b>클레임 물류 23건 → 10건 감축 프로그램</b>
           <span class="pj-team">운영팀</span>
@@ -1229,7 +1525,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>7월 물류 23건·고객 6건, 6월 대비 감소세지만 목표 미달</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::SV 교육 매뉴얼 표준화로 오픈 리드타임 단축" data-team="운영팀" data-title="SV 교육 매뉴얼 표준화로 오픈 리드타임 단축" data-value="신규·양수 매장 오픈 속도 향상">
         <div class="pj-head">
           <b>SV 교육 매뉴얼 표준화로 오픈 리드타임 단축</b>
           <span class="pj-team">운영팀</span>
@@ -1240,7 +1542,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>교육 매뉴얼 수정 중 · 파트별 오픈 리스트 영문화 진행</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="ops::포스사 변경 대상 매장 확대" data-team="운영팀" data-title="포스사 변경 대상 매장 확대" data-value="검증 후 전 매장 확대 근거 확보">
         <div class="pj-head">
           <b>포스사 변경 대상 매장 확대</b>
           <span class="pj-team">운영팀</span>
@@ -1251,7 +1559,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>1차 3개점(노원·광교법원·수원망포) 선정 완료</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="secretary::그룹웨어 이관 완료 후 결재 프로세스 전자화" data-team="인사총무팀" data-title="그룹웨어 이관 완료 후 결재 프로세스 전자화" data-value="기안·결재 소요시간 단축">
         <div class="pj-head">
           <b>그룹웨어 이관 완료 후 결재 프로세스 전자화</b>
           <span class="pj-team">인사총무팀</span>
@@ -1262,7 +1576,13 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>인사정보 이관 완료, 기본 세팅 진행 중</dd>
           <dt>가정</dt><dd>공수 보통 — 실행 여부는 상무 결정 사항</dd>
         </dl>
-      </li><li>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
+      </li><li data-key="secretary::벤처기업·이노비즈 인증 갱신 선제 준비" data-team="인사총무팀" data-title="벤처기업·이노비즈 인증 갱신 선제 준비" data-value="세제·금융 혜택 유지">
         <div class="pj-head">
           <b>벤처기업·이노비즈 인증 갱신 선제 준비</b>
           <span class="pj-team">인사총무팀</span>
@@ -1273,12 +1593,97 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
           <dt>근거</dt><dd>벤처 10/26 · 이노비즈 11/20 만료 도래</dd>
           <dt>가정</dt><dd>공수 낮음 — 실행 여부는 상무 결정 사항</dd>
         </dl>
+        <div class="dec-row">
+          <button type="button" class="dec" data-d="진행">진행</button>
+          <button type="button" class="dec" data-d="수정보완">수정보완</button>
+          <button type="button" class="dec" data-d="반려">반려</button>
+          <span class="dec-mark"></span>
+        </div>
       </li></ul></div>
     </details>
   </section>
 
+  <script>
+  /* 결재 표시 — 서버 없이 각자 기기에 저장한다.
+     이 페이지는 정적 파일이라 남에게 전송할 방법이 없다. 그래서 '복사'로 넘긴다.
+     ⚠️ 저장은 기기별이다. 다른 사람 화면에는 보이지 않는다 — 화면에도 그렇게 적어둔다. */
+  (function () {
+    var KEY = "bobae.briefing.decisions.v1";
+    var load = function () { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } };
+    var save = function (v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} };
+    var state = load();
+
+    var stamp = function () {
+      var d = new Date(), p = function (n) { return String(n).padStart(2, "0"); };
+      return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+    };
+
+    var paint = function (li) {
+      var rec = state[li.dataset.key];
+      li.className = rec ? "d-" + rec.d : "";
+      var mark = li.querySelector(".dec-mark");
+      mark.textContent = rec ? rec.d + " · " + rec.at : "";
+      li.querySelectorAll(".dec").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(Boolean(rec) && rec.d === b.dataset.d));
+      });
+      count();
+    };
+
+    var count = function () {
+      var n = { "진행": 0, "수정보완": 0, "반려": 0 };
+      Object.keys(state).forEach(function (k) { if (n[state[k].d] !== undefined) n[state[k].d]++; });
+      var bar = document.getElementById("dec-count");
+      if (bar) {
+        var total = document.querySelectorAll(".pj-list > li").length;
+        var done = n["진행"] + n["수정보완"] + n["반려"];
+        bar.textContent = "진행 " + n["진행"] + " · 수정보완 " + n["수정보완"] + " · 반려 " + n["반려"] + " · 미결정 " + (total - done);
+      }
+    };
+
+    document.querySelectorAll(".pj-list > li").forEach(function (li) {
+      li.querySelectorAll(".dec").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var rec = state[li.dataset.key];
+          if (rec && rec.d === btn.dataset.d) delete state[li.dataset.key];
+          else state[li.dataset.key] = { d: btn.dataset.d, at: stamp() };
+          save(state);
+          paint(li);
+        });
+      });
+      paint(li);
+    });
+
+    var copyBtn = document.getElementById("dec-copy");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        var lines = ["가상 성과 결정 (" + stamp() + ")", ""];
+        ["진행", "수정보완", "반려"].forEach(function (g) {
+          var picked = [];
+          document.querySelectorAll(".pj-list > li").forEach(function (li) {
+            var rec = state[li.dataset.key];
+            if (rec && rec.d === g) picked.push(li);
+          });
+          if (!picked.length) return;
+          lines.push("■ " + g + " " + picked.length + "건");
+          picked.forEach(function (li) {
+            lines.push("  · [" + li.dataset.team + "] " + li.dataset.title);
+            if (li.dataset.value) lines.push("      " + li.dataset.value);
+          });
+          lines.push("");
+        });
+        if (lines.length <= 2) { copyBtn.textContent = "결정한 항목이 없습니다"; setTimeout(function(){copyBtn.textContent="결정 내용 복사";}, 2000); return; }
+        var text = lines.join("\n");
+        var done = function () { copyBtn.textContent = "복사했습니다 — 슬랙에 붙여넣으세요"; setTimeout(function(){copyBtn.textContent="결정 내용 복사";}, 2500); };
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () { window.prompt("아래 내용을 복사하세요", text); });
+        else window.prompt("아래 내용을 복사하세요", text);
+      });
+    }
+    count();
+  })();
+  </script>
+
   <footer>
-    <p>이 문서는 2026년 7월 31일 오전 11:25 시점의 데이터로 만들어졌습니다. 이후 실적은 반영되어 있지 않습니다.</p>
+    <p>이 문서는 2026년 7월 31일 오후 12:13 시점의 데이터로 만들어졌습니다. 이후 실적은 반영되어 있지 않습니다.</p>
     <p>결재(진행·수정보완·반려)와 팀장 업무지시는 AI 오피스 대시보드에서만 가능합니다.</p>
     <p>사내 한정 문서입니다. 매출·점포·직원 정보가 들어 있으니 외부에 공유하지 마세요.</p>
   </footer>
