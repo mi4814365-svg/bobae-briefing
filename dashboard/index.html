@@ -284,60 +284,26 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
   <p class="eyebrow">주식회사 보배에프앤비 · 사내 한정</p>
   <h1>업무 대시보드</h1>
 
-  <div class="state"><span class="dot" id="dot"></span><span id="msg">연결 확인 중…</span></div>
-
-  <div id="ok" class="hidden">
-    <p>대시보드가 열려 있습니다. 잠시 후 자동으로 이동합니다.</p>
-    <p style="margin-top:14px;"><a class="go" id="link" href="https://dow-taste-explore-achieving.trycloudflare.com?view=dashboard">지금 열기</a></p>
+  <div class="state">
+    <span class="dot on"></span>
+    <span>열려 있음 · 2026-07-31 13:41 확인</span>
   </div>
 
-  <div id="down" class="hidden">
-    <p><strong>지금은 대시보드가 꺼져 있습니다.</strong> 사내 PC 에서 운영되는 화면이라 업무시간 외에는 닫혀 있을 수 있습니다.</p>
-    <p class="alt">대신 <a href="https://mi4814365-svg.github.io/bobae-briefing/">경영 브리핑</a>에서 오늘 지표·폐점 사유·경영전략·팀 현황을 보실 수 있습니다. 이쪽은 항상 열려 있습니다.</p>
-    <p class="alt">사무실 와이파이에서는 <a href="http://192.168.0.37:3000/?view=dashboard">http://192.168.0.37:3000</a> 로도 들어가실 수 있습니다.</p>
+  <div>
+    <p>대시보드로 이동합니다. 안 넘어가면 아래를 눌러주세요.</p>
+    <p style="margin-top:14px;"><a class="go" href="https://dow-taste-explore-achieving.trycloudflare.com/?view=dashboard">대시보드 열기</a></p>
   </div>
 
-  <p class="state">주소 확인 2026-07-31 12:19</p>
+  <p class="state">상태는 10분마다 자동으로 다시 확인합니다.</p>
 </div>
 
 <script>
-(function () {
-  var target = "https://dow-taste-explore-achieving.trycloudflare.com";
-  var dot = document.getElementById("dot"), msg = document.getElementById("msg");
-  var ok = document.getElementById("ok"), down = document.getElementById("down");
-
-  var fail = function (why) {
-    dot.className = "dot off"; msg.textContent = why;
-    down.classList.remove("hidden");
-  };
-  if (!target) { fail("등록된 주소가 없습니다"); return; }
-
-  /* 살아있는지 먼저 확인한다 — 죽은 주소로 떨구지 않기 위해서다.
-     ⚠️ fetch 는 못 쓴다. 개발서버(Vite)가 다른 도메인에서 오는 요청을
-        Origin 만 보고 403 으로 막는다(CORS 헤더를 붙여도 그 전에 잘린다).
-        <img> 로드는 Origin 을 안 보내므로 통과한다 — 그래서 이미지로 확인한다. */
-  var done = false;
-  var probe = new Image();
-  var timer = setTimeout(function () {
-    if (done) return;
-    done = true; probe.src = "";
-    fail("지금은 닫혀 있습니다");
-  }, 8000);
-
-  probe.onload = function () {
-    if (done) return;
-    done = true; clearTimeout(timer);
-    dot.className = "dot on"; msg.textContent = "연결됨";
-    ok.classList.remove("hidden");
-    setTimeout(function () { location.replace(target + "/?view=dashboard"); }, 1200);
-  };
-  probe.onerror = function () {
-    if (done) return;
-    done = true; clearTimeout(timer);
-    fail("지금은 닫혀 있습니다");
-  };
-  probe.src = target + "/favicon.svg?t=" + Date.now();
-})();
+/* 열려 있다고 확인된 경우에만 자동으로 넘긴다.
+   ⚠️ 브라우저에서 생사 확인을 할 수 없다 — 개발서버(Vite)가 다른 도메인에서 오는
+      요청을 Sec-Fetch/Origin 단계에서 403 으로 막아 fetch 도 <img> 도 통하지 않는다.
+      그래서 **서버(감시기)가 10분마다 확인한 결과를 이 파일에 박아** 쓴다.
+      화면 이동(top-level navigation)은 막히지 않으므로 이동 자체는 정상 동작한다. */
+setTimeout(function () { location.replace("https://dow-taste-explore-achieving.trycloudflare.com/?view=dashboard"); }, 900);
 </script>
 </body>
 </html>
