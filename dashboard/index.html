@@ -312,17 +312,31 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--seal); outline
   };
   if (!target) { fail("등록된 주소가 없습니다"); return; }
 
-  // 살아있는지 먼저 물어본다 — 죽은 주소로 떨구지 않기 위해서다
-  var timer = setTimeout(function () { fail("응답이 없습니다"); }, 8000);
-  fetch(target + "/api/ping", { cache: "no-store" })
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("bad")); })
-    .then(function () {
-      clearTimeout(timer);
-      dot.className = "dot on"; msg.textContent = "연결됨";
-      ok.classList.remove("hidden");
-      setTimeout(function () { location.replace(target + "/?view=dashboard"); }, 1200);
-    })
-    .catch(function () { clearTimeout(timer); fail("지금은 닫혀 있습니다"); });
+  /* 살아있는지 먼저 확인한다 — 죽은 주소로 떨구지 않기 위해서다.
+     ⚠️ fetch 는 못 쓴다. 개발서버(Vite)가 다른 도메인에서 오는 요청을
+        Origin 만 보고 403 으로 막는다(CORS 헤더를 붙여도 그 전에 잘린다).
+        <img> 로드는 Origin 을 안 보내므로 통과한다 — 그래서 이미지로 확인한다. */
+  var done = false;
+  var probe = new Image();
+  var timer = setTimeout(function () {
+    if (done) return;
+    done = true; probe.src = "";
+    fail("지금은 닫혀 있습니다");
+  }, 8000);
+
+  probe.onload = function () {
+    if (done) return;
+    done = true; clearTimeout(timer);
+    dot.className = "dot on"; msg.textContent = "연결됨";
+    ok.classList.remove("hidden");
+    setTimeout(function () { location.replace(target + "/?view=dashboard"); }, 1200);
+  };
+  probe.onerror = function () {
+    if (done) return;
+    done = true; clearTimeout(timer);
+    fail("지금은 닫혀 있습니다");
+  };
+  probe.src = target + "/favicon.svg?t=" + Date.now();
 })();
 </script>
 </body>
