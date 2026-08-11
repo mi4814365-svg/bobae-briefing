@@ -1,0 +1,44 @@
+name: 인스타 점검
+
+on:
+  push:
+    paths:
+      - "insta/**"
+      - ".github/workflows/instagram-*.yml"
+  pull_request:
+    paths:
+      - "insta/**"
+  schedule:
+    # 매주 월요일 09:00 KST — 토큰이 끊기기 전에 미리 안다.
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  queue:
+    name: 큐 문법 검사
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python3 insta/publish.py --validate
+
+  token:
+    name: 토큰 만료 확인
+    # 시크릿이 없는 포크의 PR에서는 돌려봐야 실패만 한다.
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_API_BASE: ${{ vars.IG_API_BASE }}
+          IG_API_VERSION: ${{ vars.IG_API_VERSION }}
+        run: python3 insta/check_token.py --warn-days 14

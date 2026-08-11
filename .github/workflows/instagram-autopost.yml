@@ -1,0 +1,72 @@
+name: 인스타 자동 업로드
+
+on:
+  schedule:
+    # 매시 정각(UTC). 깃허브 크론은 5~15분 늦게 도는 일이 흔하므로
+    # 예약 시각은 "이 시각 이후 처음 도는 회차에 올라간다"로 생각하면 된다.
+    - cron: "0 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "올리지 않고 대상만 확인"
+        type: boolean
+        default: false
+      limit:
+        description: "한 번에 올릴 최대 개수"
+        type: string
+        default: "5"
+
+# 두 회차가 겹치면 같은 글을 두 번 올릴 수 있다. 줄을 세우되 취소하진 않는다.
+concurrency:
+  group: instagram-autopost
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 예약 글 발행
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_API_BASE: ${{ vars.IG_API_BASE }}
+          IG_API_VERSION: ${{ vars.IG_API_VERSION }}
+          # 저장소 안 이미지를 인스타가 받아갈 공개 주소. 변수를 안 잡으면
+          # 이 저장소의 raw 주소를 쓴다 (공개 저장소일 때만 동작한다).
+          IG_MEDIA_BASE_URL: ${{ vars.IG_MEDIA_BASE_URL || format('https://raw.githubusercontent.com/{0}/{1}/insta', github.repository, github.ref_name) }}
+        run: |
+          python3 insta/publish.py \
+            --limit "${{ inputs.limit || '5' }}" \
+            ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: 발행 기록 커밋
+        if: ${{ always() && !inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A insta/queue insta/published insta/failed
+          if git diff --cached --quiet; then
+            echo "기록할 변화 없음"
+            exit 0
+          fi
+          git commit -m "인스타 발행 기록 $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M')"
+
+          # 브리핑 갱신과 밀릴 수 있으니 몇 번 다시 얹어본다.
+          for delay in 0 2 4 8; do
+            sleep "$delay"
+            git pull --rebase origin "${{ github.ref_name }}" || continue
+            git push origin "HEAD:${{ github.ref_name }}" && exit 0
+          done
+          echo "::error::발행 기록을 밀어넣지 못했다. 큐 상태를 손으로 확인하라." >&2
+          exit 1
