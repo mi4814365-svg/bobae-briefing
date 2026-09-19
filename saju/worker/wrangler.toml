@@ -1,0 +1,8 @@
+name = "myounwoondang-proxy"
+main = "anthropic-proxy.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+# 쉼표로 여러 개 허용 가능
+ALLOWED_ORIGIN = "https://mi4814365-svg.github.io"
+# 비밀키는 `wrangler secret put ANTHROPIC_API_KEY` 로 등록
